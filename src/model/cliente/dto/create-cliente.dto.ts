@@ -1,42 +1,43 @@
-import { Pessoa } from 'src/model/pessoa/entities/pessoa.entity';
+import {
+  ArrayMinSize,
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
 import { Cliente } from '../entities/cliente.entity';
 
+import { CreatePessoaDto } from 'src/model/pessoa/dto/create-pessoa.dto';
+
 export class CreateClienteDto extends Cliente {
-  constructor(data: {
-    cnpj: string;
-    nome: string;
-    data_de_fundacao: Date | string;
-    tipo: boolean;
-    telefone: string;
-    email: string;
-    enderecoId: string;
-    pessoa: Pessoa[];
-  }) {
-    super();
-    this.cnpj = data.cnpj;
-    this.nome = data.nome;
-    this.data_de_fundacao = this.parseDate(data.data_de_fundacao);
-    this.tipo = data.tipo;
-    this.telefone = data.telefone;
-    this.email = data.email;
-    this.enderecoId = data.enderecoId;
-    this.pessoa = this.parsePessoa(data.pessoa);
-  }
+  @IsNotEmpty({ message: 'CNPJ é obrigatório' })
+  cnpj: string;
 
-  private parseDate(date: Date | string): Date {
-    if (date instanceof Date) {
-      return date;
-    } else if (typeof date === 'string') {
-      return new Date(date);
-    } else {
-      throw new Error('Data inválida');
-    }
-  }
+  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  nome: string;
 
-  private parsePessoa(pessoa: Pessoa[]): Pessoa[] {
-    if (pessoa.length < 1) {
-      throw new Error('Tem que ter 1 ou mais Pessoas relacionadas');
-    }
-    return pessoa;
-  }
+  @IsNotEmpty({ message: 'Data de fundação é obrigatória' })
+  @IsDateString()
+  data_de_fundacao: Date | string;
+
+  @IsNotEmpty({ message: 'Tipo é obrigatório' })
+  tipo: boolean;
+
+  @IsNotEmpty({ message: 'Telefone é obrigatório' })
+  telefone: string;
+
+  @IsNotEmpty({ message: 'Email é obrigatório' })
+  @IsEmail({}, { message: 'Email inválido' })
+  email: string;
+
+  @IsNotEmpty({ message: 'Endereço ID é obrigatório' })
+  enderecoId: string;
+
+  @IsNotEmpty({ message: 'Pessoa é obrigatória' })
+  @ArrayMinSize(1, { message: 'Pelo mennos uma pessoa é obrigatória' })
+  @ValidateNested({ each: true })
+  @Type(() => CreatePessoaDto)
+  pessoa: CreatePessoaDto[];
 }

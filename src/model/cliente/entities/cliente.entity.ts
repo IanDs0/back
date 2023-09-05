@@ -1,4 +1,3 @@
-// import { Prisma } from '@prisma/client';
 import { Pessoa } from 'src/model/pessoa/entities/pessoa.entity';
 
 export class Cliente {

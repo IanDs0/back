@@ -9,9 +9,6 @@ export class ClienteService {
   constructor(private prisma: PrismaService) {}
 
   create(createClienteDto: CreateClienteDto) {
-    if (createClienteDto.pessoa.length < 1) {
-      return 'Tem que ter 1 ou mais Pessoas relacionadas';
-    }
     return this.prisma.cliente.create({
       data: {
         cnpj: createClienteDto.cnpj,
@@ -111,11 +108,13 @@ export class ClienteService {
         telefone: updateClienteDto.telefone,
         email: updateClienteDto.email,
         enderecoId: updateClienteDto.enderecoId,
-        pessoa: {
-          set: updateClienteDto.pessoa.map((pessoa) => {
-            return { cpf: pessoa.cpf };
-          }),
-        },
+        pessoa: updateClienteDto.pessoa
+          ? {
+              set: updateClienteDto.pessoa.map((pessoa) => {
+                return { cpf: pessoa.cpf };
+              }),
+            }
+          : undefined,
       },
     });
   }
