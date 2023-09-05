@@ -10,7 +10,20 @@ export class PessoaService {
 
   create(createPessoaDto: CreatePessoaDto) {
     return this.prisma.pessoa.create({
-      data: createPessoaDto,
+      data: {
+        nome: createPessoaDto.nome,
+        cpf: createPessoaDto.cpf,
+        data_de_nascimento: createPessoaDto.data_de_nascimento,
+        telefone: createPessoaDto.telefone,
+        email: createPessoaDto.email,
+        cliente: createPessoaDto.cliente
+          ? {
+              connect: createPessoaDto.cliente.map((cliente) => ({
+                cnpj: cliente.cnpj,
+              })),
+            }
+          : undefined,
+      },
       include: {
         cliente: {
           select: {
@@ -63,7 +76,20 @@ export class PessoaService {
       where: {
         id,
       },
-      data: updatePessoaDto,
+      data: {
+        nome: updatePessoaDto.nome,
+        cpf: updatePessoaDto.cpf,
+        data_de_nascimento: updatePessoaDto.data_de_nascimento,
+        telefone: updatePessoaDto.telefone,
+        email: updatePessoaDto.email,
+        cliente: updatePessoaDto.cliente
+          ? {
+              set: updatePessoaDto.cliente.map((cliente) => {
+                return { cnpj: cliente.cnpj };
+              }),
+            }
+          : undefined,
+      },
     });
   }
 

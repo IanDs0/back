@@ -1,11 +1,12 @@
-import { Prisma } from '@prisma/client';
+import { Cliente } from 'src/model/cliente/entities/cliente.entity';
 
-export class Pessoa implements Prisma.PessoaUncheckedCreateInput {
-  id?: string;
+export class Pessoa {
+  // id?: string;
   nome: string;
   cpf: string;
-  data_de_nascimento?: Date | string;
+  data_de_nascimento: Date | string;
   telefone: string;
   email: string;
-  cliente?: Prisma.ClienteUncheckedCreateNestedManyWithoutPessoaInput;
+  cliente?: Cliente[];
+  // cliente?: Prisma.ClienteUncheckedCreateNestedManyWithoutPessoaInput;
 }
