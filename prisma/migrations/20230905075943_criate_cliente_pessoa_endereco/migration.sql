@@ -16,7 +16,7 @@ CREATE TABLE "pessoas" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "nome" TEXT NOT NULL,
     "cpf" TEXT NOT NULL,
-    "data_de_nascimento" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_de_nascimento" DATETIME NOT NULL,
     "telefone" TEXT NOT NULL,
     "email" TEXT NOT NULL
 );

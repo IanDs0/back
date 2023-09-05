@@ -42,7 +42,7 @@ model Pessoa {
   id                 String    @id @default(uuid())
   nome               String
   cpf                String    @unique
-  data_de_nascimento DateTime  @default(now())
+  data_de_nascimento DateTime 
   telefone           String
   email              String    @unique
   cliente            Cliente[]
