@@ -7,8 +7,8 @@ CREATE TABLE "clientes" (
     "tipo" BOOLEAN NOT NULL,
     "telefone" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "endereco_id" TEXT NOT NULL,
-    CONSTRAINT "clientes_endereco_id_fkey" FOREIGN KEY ("endereco_id") REFERENCES "enderecos" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "enderecoId" TEXT NOT NULL,
+    CONSTRAINT "clientes_enderecoId_fkey" FOREIGN KEY ("enderecoId") REFERENCES "enderecos" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable

@@ -6,60 +6,60 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"//"postgresql"
+  provider = "sqlite" //"postgresql"
   url      = env("DATABASE_URL")
 }
 
 //login
 model User {
-  id String @id @default(uuid())
-  username String @unique
-  email String @unique
+  id             String @id @default(uuid())
+  username       String @unique
+  email          String @unique
   password_token String
-  salt String
+  salt           String
 
   @@map("users")
 }
 
 //clientes
-model Cliente{
-  id String @id @default(uuid())
-  cnpj String @unique
-  nome String
+model Cliente {
+  id               String   @id @default(uuid())
+  cnpj             String   @unique
+  nome             String
   data_de_fundacao DateTime
-  tipo Boolean//regular(true) ou avulso(false)
-  telefone String
-  email String @unique
-  endereco_id String
-  endereco Endereco @relation(fields: [endereco_id], references: [id])
-  pessoa Pessoa[] 
+  tipo             Boolean //regular(true) ou avulso(false)
+  telefone         String
+  email            String   @unique
+  endereco         Endereco @relation(fields: [enderecoId], references: [id])
+  pessoa           Pessoa[]
+  enderecoId       String
 
   @@map("clientes")
 }
 
 //pessoas
-model Pessoa{
-  id String @id @default(uuid())
-  nome String
-  cpf String @unique
-  data_de_nascimento DateTime @default(now())
-  telefone String
-  email String @unique
-  cliente Cliente[]
-  
+model Pessoa {
+  id                 String    @id @default(uuid())
+  nome               String
+  cpf                String    @unique
+  data_de_nascimento DateTime  @default(now())
+  telefone           String
+  email              String    @unique
+  cliente            Cliente[]
+
   @@map("pessoas")
 }
 
 //endereços
-model Endereco{
-  id String @id @default(uuid())
-  cep String
+model Endereco {
+  id         String    @id @default(uuid())
+  cep        String
   logradouro String
-  numero String
-  bairro String
-  cidade String
-  estado String
-  cliente Cliente[]
+  numero     String
+  bairro     String
+  cidade     String
+  estado     String
+  Cliente    Cliente[]
 
   @@map("enderecos")
 }
