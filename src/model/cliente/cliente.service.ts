@@ -8,48 +8,96 @@ import { PrismaService } from '../../database/prisma.service';
 export class ClienteService {
   constructor(private prisma: PrismaService) {}
 
-  create(createClienteDto: CreateClienteDto) {
-    return this.prisma.cliente.create({
-      data: {
-        cnpj: createClienteDto.cnpj,
-        nome: createClienteDto.nome,
-        data_de_fundacao: createClienteDto.data_de_fundacao,
-        tipo: createClienteDto.tipo,
-        telefone: createClienteDto.telefone,
-        email: createClienteDto.email,
-        enderecoId: createClienteDto.enderecoId,
-        pessoa: {
-          connectOrCreate: createClienteDto.pessoa.map((pessoa) => {
-            return {
-              where: {
-                cpf: pessoa.cpf,
-              },
-              create: {
-                nome: pessoa.nome,
-                cpf: pessoa.cpf,
-                data_de_nascimento:
-                  typeof pessoa.data_de_nascimento === 'string'
-                    ? new Date(pessoa.data_de_nascimento)
-                    : pessoa.data_de_nascimento,
-                telefone: pessoa.telefone,
-                email: pessoa.email,
-              },
-            };
-          }),
-        },
-      },
-      include: {
-        pessoa: {
-          select: {
-            id: true,
-            nome: true,
-            cpf: true,
-            email: true,
-            telefone: true,
+  async createClienteWithEnderecoAndUser(
+    clienteData: any, // Substitua 'any' pelos tipos corretos
+    enderecoData: any,
+    userData: any,
+  ) {
+    let createdCliente;
+
+    await this.prisma.$transaction(async (tx) => {
+      const endereco = await tx.endereco.create({
+        data: enderecoData,
+      });
+
+      createdCliente = await tx.cliente.create({
+        data: {
+          ...clienteData,
+          endereco: {
+            connect: {
+              id: endereco.id,
+            },
           },
         },
-      },
+      });
+
+      await tx.pessoa.create({
+        data: {
+          ...userData,
+          cliente: {
+            connect: {
+              id: createdCliente.id,
+            },
+          },
+        },
+      });
     });
+
+    return createdCliente;
+  }
+
+  async create(createClienteDto: CreateClienteDto) {
+    let createdCliente;
+
+    await this.prisma.$transaction(async (tx) => {
+      const endereco = await tx.endereco.create({
+        data: createClienteDto.endereco,
+      });
+
+      createdCliente = await tx.cliente.create({
+        data: {
+          cnpj: createClienteDto.cnpj,
+          nome: createClienteDto.nome,
+          data_de_fundacao: createClienteDto.data_de_fundacao,
+          tipo: createClienteDto.tipo,
+          telefone: createClienteDto.telefone,
+          email: createClienteDto.email,
+          enderecoId: endereco.id,
+          pessoa: {
+            connectOrCreate: createClienteDto.pessoa.map((pessoa) => {
+              return {
+                where: {
+                  cpf: pessoa.cpf,
+                },
+                create: {
+                  nome: pessoa.nome,
+                  cpf: pessoa.cpf,
+                  data_de_nascimento:
+                    typeof pessoa.data_de_nascimento === 'string'
+                      ? new Date(pessoa.data_de_nascimento)
+                      : pessoa.data_de_nascimento,
+                  telefone: pessoa.telefone,
+                  email: pessoa.email,
+                },
+              };
+            }),
+          },
+        },
+        include: {
+          pessoa: {
+            select: {
+              id: true,
+              nome: true,
+              cpf: true,
+              email: true,
+              telefone: true,
+            },
+          },
+        },
+      });
+    });
+
+    return createdCliente;
   }
 
   findAll() {

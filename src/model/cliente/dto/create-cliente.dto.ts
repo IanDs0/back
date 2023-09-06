@@ -8,6 +8,7 @@ import {
 import { Type } from 'class-transformer';
 
 import { Cliente } from '../entities/cliente.entity';
+import { Endereco } from '../entities/endereco.entity';
 
 import { CreatePessoaDto } from 'src/model/pessoa/dto/create-pessoa.dto';
 
@@ -32,8 +33,9 @@ export class CreateClienteDto extends Cliente {
   @IsEmail({}, { message: 'Email inválido' })
   email: string;
 
-  @IsNotEmpty({ message: 'Endereço ID é obrigatório' })
-  enderecoId: string;
+  @IsNotEmpty({ message: 'Endereço é obrigatório' })
+  @Type(() => Endereco)
+  endereco: Endereco;
 
   @IsNotEmpty({ message: 'Pessoa é obrigatória' })
   @ArrayMinSize(1, { message: 'Pelo mennos uma pessoa é obrigatória' })
