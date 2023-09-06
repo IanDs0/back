@@ -57,6 +57,7 @@ export class PessoaService {
         id: true,
         nome: true,
         cpf: true,
+        data_de_nascimento: true,
         email: true,
         telefone: true,
         cliente: {
