@@ -17,7 +17,10 @@ export class UserService {
       data: {
         username: createUserDto.username,
         email: createUserDto.email,
-        password_token: await bcrypt.hash(createUserDto.password, 10),
+        password_token: await bcrypt.hash(
+          createUserDto.password,
+          salt.toString(),
+        ),
         salt: salt.toString(),
       },
     });
@@ -28,7 +31,11 @@ export class UserService {
     };
   }
 
-  findOne(user: string) {
-    return `This action returns a #${user} user`;
+  findByUser(username: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
   }
 }
