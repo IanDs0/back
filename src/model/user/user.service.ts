@@ -17,10 +17,7 @@ export class UserService {
       data: {
         username: createUserDto.username,
         email: createUserDto.email,
-        password_token: await bcrypt.hash(
-          createUserDto.password,
-          salt.toString(),
-        ),
+        password_token: await bcrypt.hash(createUserDto.password, salt),
         salt: salt.toString(),
       },
     });

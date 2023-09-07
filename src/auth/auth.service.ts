@@ -9,11 +9,6 @@ import { UserPayload } from './model/UserPayload';
 
 @Injectable()
 export class AuthService {
-  //   constructor(
-  //     private usersService: User,
-  //     private jwtService: JwtService,
-  //   ) {}
-
   constructor(
     private readonly usersService: UserService,
     private jwtService: JwtService,

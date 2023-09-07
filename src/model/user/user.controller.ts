@@ -1,19 +1,15 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { IsPublic } from 'src/auth/decorator/is-public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @IsPublic()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
-  }
-
-  @Get(':user')
-  findByUser(@Param('user') user: string) {
-    return this.userService.findByUser(user);
   }
 }
