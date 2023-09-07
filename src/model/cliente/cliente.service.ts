@@ -8,44 +8,6 @@ import { PrismaService } from '../../database/prisma.service';
 export class ClienteService {
   constructor(private prisma: PrismaService) {}
 
-  async createClienteWithEnderecoAndUser(
-    clienteData: any, // Substitua 'any' pelos tipos corretos
-    enderecoData: any,
-    userData: any,
-  ) {
-    let createdCliente;
-
-    await this.prisma.$transaction(async (tx) => {
-      const endereco = await tx.endereco.create({
-        data: enderecoData,
-      });
-
-      createdCliente = await tx.cliente.create({
-        data: {
-          ...clienteData,
-          endereco: {
-            connect: {
-              id: endereco.id,
-            },
-          },
-        },
-      });
-
-      await tx.pessoa.create({
-        data: {
-          ...userData,
-          cliente: {
-            connect: {
-              id: createdCliente.id,
-            },
-          },
-        },
-      });
-    });
-
-    return createdCliente;
-  }
-
   async create(createClienteDto: CreateClienteDto) {
     let createdCliente;
 
@@ -121,6 +83,9 @@ export class ClienteService {
         cnpj: true,
         nome: true,
         email: true,
+        data_de_fundacao: true,
+        tipo: true,
+        telefone: true,
         endereco: {
           select: {
             cep: true,

@@ -44,6 +44,14 @@ export class PessoaService {
         nome: true,
         cpf: true,
         email: true,
+        cliente: {
+          select: {
+            id: true,
+            cnpj: true,
+            nome: true,
+            email: true,
+          },
+        },
       },
     });
   }
