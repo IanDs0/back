@@ -1,0 +1,32 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+  
+  backend:
+    build:
+      context: . # O Dockerfile do backend está neste diretório
+    environment:
+      - DATABASE_URL=postgresql://root:mypassword@postgres:5432/database
+      - JWT_SECRET=Teste # se quiser passar por parametro ${JWT_SECRET}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
+  # frontend:
+  #   build:
+  #     context: ./front # O Dockerfile do frontend está neste diretório
+  #   environment:
+  #     - API_URL=http://backend:3000
+  #   ports:
+  #     - "3000:3001"
+  #   depends_on:
+  #     - backend
+  #     - postgres
